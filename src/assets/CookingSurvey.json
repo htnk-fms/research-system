@@ -1,0 +1,150 @@
+[
+    {
+        "id": 1,
+        "text": "性別を回答してください",
+        "subtext": "",
+        "name": "q-1",
+        "answer_type": "radio",
+        "items":
+        [
+            {
+                "text": "男性",
+                "value": "men"
+            },
+            {
+                "text": "女性",
+                "value": "women"
+            },
+            {
+                "text": "回答しない",
+                "value": "noanswer"
+            }
+        ]
+
+    },
+    {
+        "id": 2,
+        "text": "年齢を回答してください",
+        "subtext": "",
+        "name": "q-2",
+        "answer_type": "radio",
+        "items":
+        [
+            {
+                "text": "10代",
+                "value": "10s"
+            },
+            {
+                "text": "20代",
+                "value": "20s"
+            },
+            {
+                "text": "30代",
+                "value": "30s"
+            },
+            {
+                "text": "40代",
+                "value": "40s"
+            },
+            {
+                "text": "50代",
+                "value": "50s"
+            },
+            {
+                "text": "60代",
+                "value": "60s"
+            },
+            {
+                "text": "回答しない",
+                "value": "noanswer"
+            }
+        ]
+
+    },
+    {
+        "id": 3,
+        "text": "自炊する頻度を教えてください",
+        "subtext": "",
+        "name": "q-3",
+        "answer_type": "radio",
+        "items":
+        [
+            {
+                "text": "毎日",
+                "value": "everyday"
+            },
+            {
+                "text": "週3〜4回",
+                "value": "3to4"
+            },
+            {
+                "text": "週1〜2回",
+                "value": "1to2"
+            },
+            {
+                "text": "月に数回程度",
+                "value": "seleral"
+            },
+            {
+                "text": "ほとんど自炊はしない",
+                "value": "no"
+            }
+        ]
+
+    },
+    {
+        "id": 4,
+        "text": "得意な料理、普段よく作る料理を3品以上教えてください",
+        "subtext": "",
+        "name": "q-4",
+        "answer_type": "textarea",
+        "changeSize": 35
+    },
+    {
+        "id": 5,
+        "text": "普段料理をする上で，困った経験について教えてください",
+        "subtext": "",
+        "name": "q-5",
+        "answer_type": "textarea",
+        "changeSize": 30
+    },
+    {
+        "id": 6,
+        "text": "普段料理をする時に，材料を計量することは面倒に感じますか",
+        "subtext": "",
+        "name": "q-6",
+        "answer_type": "radio",
+        "items":
+        [
+            {
+                "text": "非常に面倒である",
+                "value": "very"
+            },
+            {
+                "text": "やや面倒である",
+                "value": "quite"
+            },
+            {
+                "text": "どちらともいえない",
+                "value": "neither"
+            },
+            {
+                "text": "あまり面倒ではない",
+                "value": "little"
+            },
+            {
+                "text": "全く面倒ではない",
+                "value": "not"
+            }
+        ]
+
+    },
+    {
+        "id": 7,
+        "text": "計量することが面倒である場合はその理由を教えてください",
+        "subtext": "面倒でない場合は「とくにありません。」と回答してください",
+        "name": "q-7",
+        "answer_type": "textarea",
+        "changeSize": 40
+    }
+]
