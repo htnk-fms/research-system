@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-textarea
-    v-model="inputText"
+    v-model="ans"
       label="ここに入力してください"
       solo
       auto-grow
@@ -17,8 +17,8 @@ export default {
   name: "TextArea",
   data() {
     return {
-      inputText: "",
-      currentInputLength: 0,
+      ans: "",
+      currentInput: 0,
       defaultHeight: null,
       height: null,
     };
@@ -32,15 +32,15 @@ export default {
   },
   methods: {
     changeHeight() {
-      this.$emit("inputAnswer", this.inputText);
-      if (this.currentInput > this.inputText.length) {
+      this.$emit("inputAnswer", this.ans);
+      if (this.currentInput > this.ans.length) {
         return this.height;
       }
-      const height = this.defaultHeight - this.inputText.length * this.changeSize;
+      const height = this.defaultHeight - this.ans.length * this.changeSize;
       if (height < 24 * 5) {
         return null;
       }
-      this.currentInput = this.inputText.length;
+      this.currentInput = this.ans.length;
       return height;
     },
   },

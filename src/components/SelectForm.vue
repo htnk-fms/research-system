@@ -34,7 +34,6 @@ export default {
     methods: {
         sendAns(){
             this.$emit("selectAnswer", this.ans);
-            this.ans=null
         }
     },
 }

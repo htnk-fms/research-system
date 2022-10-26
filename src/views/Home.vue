@@ -6,19 +6,21 @@
         <SelectForm
           :selectItems="question[currentQuestion].items"
           @selectAnswer="ans = $event"
+          ref="answer"
         />
       </div>
       <div v-if="question[currentQuestion].answer_type == 'check'">
         <Checkbox
           :selectItems="['red', 'blue', 'yellow']"
           @selectAnswer="ans = $event"
+          ref="answer"
         />
       </div>
       <div v-if="question[currentQuestion].answer_type == 'textarea' && proposeMethod">
-        <Textarea :changeSize="question[currentQuestion].changeSize" @inputAnswer="ans = $event" />
+        <Textarea ref="answer" :changeSize="question[currentQuestion].changeSize" @inputAnswer="ans = $event" />
       </div>
       <div v-if="question[currentQuestion].answer_type == 'textarea' && !proposeMethod">
-        <Textarea2 @inputAnswer="ans = $event" />
+        <Textarea2 ref="answer" @inputAnswer="ans = $event" />
       </div>
       <v-row class="justify-end">
         <v-btn id="btn" :disabled="!ans" @click="toNext()"> 次へ </v-btn>
@@ -73,6 +75,11 @@ export default {
     toNext() {
       this.currentQuestion = this.currentQuestion + 1;
       this.ans = null;
+      this.$refs.answer.ans=undefined;
+      if(this.question[this.currentQuestion].answer_type == 'textarea'){
+        this.$refs.answer.height = this.$refs.answer.defaultHeight
+        this.$refs.answer.currentInput = 0
+      }
       this.forceUpdateMyComponent();
     },
     //uuidの生成
