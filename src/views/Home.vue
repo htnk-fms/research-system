@@ -1,7 +1,10 @@
 <template>
   <div class="home">
     <v-card tile elevation="0" width="500" class="mx-auto mt-10">
-      <h3>Q.{{ question[currentQuestion].text }}{{ans}}</h3>
+      <h3>Q.{{ question[currentQuestion].text }}</h3>
+      <h5 class="justify-center mx-4 mb-5">
+        {{ question[currentQuestion].subtext }}
+      </h5>
       <div v-if="question[currentQuestion].answer_type == 'radio'">
         <SelectForm
           :selectItems="question[currentQuestion].items"
@@ -16,10 +19,22 @@
           ref="answer"
         />
       </div>
-      <div v-if="question[currentQuestion].answer_type == 'textarea' && proposeMethod">
-        <Textarea ref="answer" :changeSize="question[currentQuestion].changeSize" @inputAnswer="ans = $event" />
+      <div
+        v-if="
+          question[currentQuestion].answer_type == 'textarea' && proposeMethod
+        "
+      >
+        <Textarea
+          ref="answer"
+          :changeSize="question[currentQuestion].changeSize"
+          @inputAnswer="ans = $event"
+        />
       </div>
-      <div v-if="question[currentQuestion].answer_type == 'textarea' && !proposeMethod">
+      <div
+        v-if="
+          question[currentQuestion].answer_type == 'textarea' && !proposeMethod
+        "
+      >
         <Textarea2 ref="answer" @inputAnswer="ans = $event" />
       </div>
       <v-row class="justify-end">
@@ -31,11 +46,11 @@
 
 <script>
 // @ is an alias to /src
-import SelectForm from '@/components/SelectForm.vue';
-import Checkbox from '@/components/Checkbox.vue';
-import Textarea from '@/components/Textarea.vue';
-import Textarea2 from '@/components/Textarea2.vue';
-import CookingSurvey from '@/assets/CookingSurvey.json';
+import SelectForm from "@/components/SelectForm.vue";
+import Checkbox from "@/components/Checkbox.vue";
+import Textarea from "@/components/Textarea.vue";
+import Textarea2 from "@/components/Textarea2.vue";
+import CookingSurvey from "@/assets/CookingSurvey.json";
 
 export default {
   name: "Home",
@@ -54,33 +69,77 @@ export default {
       ans: null,
       proposeMethod: true,
       //今後書き換え必要なやつ
-      questions: 12, //問題数
       question: CookingSurvey,
     };
   },
   mounted() {
     this.getUUID();
     this.clientOS = this.getOS();
-    this.getWindowSize()
+    this.getWindowSize();
     this.defMethod();
     //
-    console.log(this.clientOS)
-    console.log(this.$store.state.windowHeight)
-    console.log(this.$store.state.windowWidth)
+    console.log(this.clientOS);
+    console.log(this.$store.state.windowHeight);
+    console.log(this.$store.state.windowWidth);
+    this.submitInfo();
   },
   methods: {
+    //postUserInfo
+    submitInfo() {
+      this.$axios
+        .get("https://hatanaka.nkmr.io/research/api/post_user_info.php", {
+          params: {
+            uuid: this.$store.state.uuid,
+            window_height: this.$store.state.windowHeight,
+            window_width: this.$store.state.windowWidth,
+            client_os: this.clientOS,
+            method: this.proposeMethod,
+          },
+        })
+        .then((response) => {
+          console.log("status:", response.status);
+        })
+        .catch((error) => {
+          alert("エラーが発生しました");
+          console.log("err:", error);
+        });
+    },
     //回答を送信する関数
-    submitAnswer() {},
+    submitAnswer() {
+      this.$axios
+        .get("https://hatanaka.nkmr.io/research/api/post_answer.php", {
+          params: {
+            uuid: this.$store.state.uuid,
+            question_num: this.question[this.currentQuestion].name,
+            answer: this.$refs.answer.ans,
+            move_size: this.$refs.answer.currentInput,
+          },
+        })
+        .then((response) => {
+          console.log("status:", response.status);
+        })
+        .catch((error) => {
+          alert("エラーが発生しました");
+          console.log("err:", error);
+        });
+    },
     //次の設問へ進む関数だよ
     toNext() {
-      this.currentQuestion = this.currentQuestion + 1;
-      this.ans = null;
-      this.$refs.answer.ans=undefined;
-      if(this.question[this.currentQuestion].answer_type == 'textarea'){
-        this.$refs.answer.height = this.$refs.answer.defaultHeight
-        this.$refs.answer.currentInput = 0
+      this.submitAnswer();
+      console.log(this.currentQuestion);
+      console.log(this.question.length);
+      if (this.currentQuestion < this.question.length - 1) {
+        this.currentQuestion = this.currentQuestion + 1;
+        this.ans = null;
+        this.$refs.answer.ans = undefined;
+        if (this.question[this.currentQuestion].answer_type == "textarea") {
+          this.$refs.answer.height = this.$refs.answer.defaultHeight;
+          this.$refs.answer.currentInput = 0;
+        }
+        this.forceUpdateMyComponent();
+      } else {
+        this.$router.push("/complete");
       }
-      this.forceUpdateMyComponent();
     },
     //uuidの生成
     getUUID() {
@@ -103,12 +162,10 @@ export default {
     getWindowSize() {
       let Height = document.documentElement.clientHeight;
       let Width = document.documentElement.clientWidth;
-      this.$store.commit("setWindowHeight", {windowHeight: Height});
-      this.$store.commit("setWindowWidth", {windowWidth: Width});
+      this.$store.commit("setWindowHeight", { windowHeight: Height });
+      this.$store.commit("setWindowWidth", { windowWidth: Width });
     },
-    toSorry(){
-
-    },
+    toSorry() {},
     getOS() {
       let ua = window.navigator.userAgent.toLowerCase();
       let os;
@@ -117,29 +174,33 @@ export default {
         os = "windows";
       } else if (ua.indexOf("android") !== -1) {
         os = "android";
-        this.$router.push('/return');
-      } else if (ua.indexOf("iphone") !== -1 || ua.indexOf("ipad") !== -1 || ( ua.indexOf('macintosh') > -1 && 'ontouchend' in document)) {
+        this.$router.push("/return");
+      } else if (
+        ua.indexOf("iphone") !== -1 ||
+        ua.indexOf("ipad") !== -1 ||
+        (ua.indexOf("macintosh") > -1 && "ontouchend" in document)
+      ) {
         os = "ios";
-        this.$router.push('/return');
+        this.$router.push("/return");
       } else if (ua.indexOf("mac os x") !== -1) {
         os = "mac";
       } else {
         os = "??";
-        this.$router.push('/return');
+        this.$router.push("/return");
       }
       return os;
     },
-    defMethod(){
+    defMethod() {
       if (Math.random() < 0.5) {
         console.log("提案手法");
-    } else {
-      console.log("比較手法");
-      this.proposeMethod = false;
-    }
+      } else {
+        console.log("比較手法");
+        this.proposeMethod = false;
+      }
     },
     forceUpdateMyComponent() {
-      this.$forceUpdate()
-      console.log("do")
+      this.$forceUpdate();
+      console.log("do");
     },
   },
 };

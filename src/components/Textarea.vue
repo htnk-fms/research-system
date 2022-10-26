@@ -22,6 +22,7 @@ export default {
       currentInput: 0,
       defaultHeight: null,
       height: null,
+      changeBox: null,
     };
   },
   props: {
@@ -37,7 +38,7 @@ export default {
       if (this.currentInput > this.ans.length) {
         return this.height;
       }
-      const height = this.defaultHeight - this.ans.length * this.changeSize;
+      const height = this.defaultHeight - this.ans.length * this.changeBox;
       if (height < 24 * 5) {
         return null;
       }
@@ -48,6 +49,7 @@ export default {
   mounted() {
     this.defaultHeight = document.documentElement.clientHeight - 120;
     this.height = this.defaultHeight;
+    this.changeBox = (this.defaultHeight - 120)/this.changeSize;
     console.log(this.changeSize)
   },
 };

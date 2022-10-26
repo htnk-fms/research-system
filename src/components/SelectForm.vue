@@ -1,8 +1,4 @@
 <template>
-  <v-container
-    class="px-0"
-    fluid
-  >
     <v-radio-group v-model="ans" value="null" >
       <v-radio
         v-for="n in selectItems.length"
@@ -12,7 +8,6 @@
         @click="sendAns()"
       ></v-radio>
     </v-radio-group>
-  </v-container>
 </template>
 
 <script>
