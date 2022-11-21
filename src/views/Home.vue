@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <v-card tile elevation="0" width="500" class="mx-auto mt-10">
+      <h5>({{question.length}}問中{{currentQuestion+1}}問目)</h5>
       <h3>Q.{{ question[currentQuestion].text }}</h3>
       <h5 class="justify-center mx-4 mb-5">
         {{ question[currentQuestion].subtext }}
@@ -21,7 +22,7 @@
       </div>
       <div
         v-if="
-          question[currentQuestion].answer_type == 'textarea' && proposeMethod
+          question[currentQuestion].answer_type == 'textarea' && proposeMethod==0
         "
       >
         <Textarea
@@ -32,13 +33,27 @@
       </div>
       <div
         v-if="
-          question[currentQuestion].answer_type == 'textarea' && !proposeMethod
+          question[currentQuestion].answer_type == 'textarea' && proposeMethod==1
         "
       >
         <Textarea2 ref="answer" @inputAnswer="ans = $event" />
       </div>
-      <v-row class="justify-end">
-        <v-btn id="btn" :disabled="!ans" @click="toNext()"> 次へ </v-btn>
+      <div
+        v-if="
+          question[currentQuestion].answer_type == 'textarea' && proposeMethod==2
+        "
+      >
+        <Textarea3 ref="answer" @inputAnswer="ans = $event" />
+      </div>
+      <v-row  >
+        <v-col class="pa-0">
+           <h4 style="margin-right:auto"></h4>
+        </v-col>
+       <v-col class="pa-0" >
+         <v-card-actions class="justify-end">
+          <v-btn color="primary" id="btn" :disabled="!ans" @click="toNext()"> 次へ </v-btn>
+         </v-card-actions>
+       </v-col>
       </v-row>
     </v-card>
   </div>
@@ -50,6 +65,7 @@ import SelectForm from "@/components/SelectForm.vue";
 import Checkbox from "@/components/Checkbox.vue";
 import Textarea from "@/components/Textarea.vue";
 import Textarea2 from "@/components/Textarea2.vue";
+import Textarea3 from "@/components/Textarea3.vue";
 import CookingSurvey from "@/assets/CookingSurvey.json";
 
 export default {
@@ -59,6 +75,7 @@ export default {
     Checkbox,
     Textarea,
     Textarea2,
+    Textarea3
   },
   data() {
     return {
@@ -78,9 +95,6 @@ export default {
     this.getWindowSize();
     this.defMethod();
     //
-    console.log(this.clientOS);
-    console.log(this.$store.state.windowHeight);
-    console.log(this.$store.state.windowWidth);
     this.submitInfo();
   },
   methods: {
@@ -110,9 +124,10 @@ export default {
         .get("https://hatanaka.nkmr.io/research/api/post_answer.php", {
           params: {
             uuid: this.$store.state.uuid,
-            question_num: this.question[this.currentQuestion].name,
+            question_num: this.question[this.currentQuestion].id,
             answer: this.$refs.answer.ans,
             move_size: this.$refs.answer.currentInput,
+            first_input_time: this.$refs.answer.firstInputTime,
           },
         })
         .then((response) => {
@@ -126,8 +141,6 @@ export default {
     //次の設問へ進む関数だよ
     toNext() {
       this.submitAnswer();
-      console.log(this.currentQuestion);
-      console.log(this.question.length);
       if (this.currentQuestion < this.question.length - 1) {
         this.currentQuestion = this.currentQuestion + 1;
         this.ans = null;
@@ -135,6 +148,7 @@ export default {
         if (this.question[this.currentQuestion].answer_type == "textarea") {
           this.$refs.answer.height = this.$refs.answer.defaultHeight;
           this.$refs.answer.currentInput = 0;
+          this.$refs.answer.firstInput = true;
         }
         this.forceUpdateMyComponent();
       } else {
@@ -156,7 +170,6 @@ export default {
       }
       //return r
       this.$store.commit("setUUID", { uuid: r });
-      console.log(this.$store.state.uuid);
     },
     //windowSizeを取得するよ
     getWindowSize() {
@@ -169,7 +182,6 @@ export default {
     getOS() {
       let ua = window.navigator.userAgent.toLowerCase();
       let os;
-      console.log(os);
       if (ua.indexOf("windows nt") !== -1) {
         os = "windows";
       } else if (ua.indexOf("android") !== -1) {
@@ -191,16 +203,10 @@ export default {
       return os;
     },
     defMethod() {
-      if (Math.random() < 0.5) {
-        console.log("提案手法");
-      } else {
-        console.log("比較手法");
-        this.proposeMethod = false;
-      }
+      this.proposeMethod = Math.floor( Math.random() * 3 ) ;
     },
     forceUpdateMyComponent() {
       this.$forceUpdate();
-      console.log("do");
     },
   },
 };

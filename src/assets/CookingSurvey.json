@@ -98,21 +98,13 @@
         "subtext": "",
         "name": "q-4",
         "answer_type": "textarea",
-        "changeSize": 35
-    },
-    {
-        "id": 5,
-        "text": "普段料理をする上で，困った経験について教えてください",
-        "subtext": "",
-        "name": "q-5",
-        "answer_type": "textarea",
         "changeSize": 30
     },
     {
-        "id": 6,
+        "id": 5,
         "text": "普段料理をする時に，材料を計量することは面倒に感じますか",
         "subtext": "",
-        "name": "q-6",
+        "name": "q-5",
         "answer_type": "radio",
         "items":
         [
@@ -140,11 +132,19 @@
 
     },
     {
-        "id": 7,
+        "id": 6,
         "text": "計量することが面倒である場合はその理由を教えてください",
-        "subtext": "面倒でない場合は「とくにありません。」と回答してください",
+        "subtext": "面倒でない方は「計量することは面倒ではありません。」と回答してください",
+        "name": "q-6",
+        "answer_type": "textarea",
+        "changeSize": 30
+    },
+    {
+        "id": 7,
+        "text": "計量すること以外で，料理をする上で面倒と感じる作業・工程を教えてください",
+        "subtext": "ない場合は「面倒なことはありません。」と回答してください",
         "name": "q-7",
         "answer_type": "textarea",
-        "changeSize": 40
+        "changeSize": 30
     }
 ]

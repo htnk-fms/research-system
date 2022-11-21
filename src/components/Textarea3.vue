@@ -52,14 +52,14 @@ export default {
         this.firstInput = false;
       }
       if (this.currentInput > this.ans.length) {
-        return this.height;
+        return this.defaultHeight;
       }
       const height = this.defaultHeight - this.ans.length * this.changeBox;
       if (height <= 24 * 5) {
-        return null;
+        return this.defaultHeight;
       }
       this.currentInput = this.ans.length;
-      return height;
+      return this.defaultHeight;
     },
   },
   mounted() {
